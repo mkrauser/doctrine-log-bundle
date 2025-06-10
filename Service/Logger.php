@@ -15,7 +15,7 @@ class Logger
     {
     }
 
-    public function log(object $object, string $action, array $changes = null) : LogEntity
+    public function log(object $object, string $action, ?array $changes = null) : LogEntity
     {
         $class = $this->entityManager->getClassMetadata(get_class($object));
         $identifier = $class->getIdentifierValues($object);

@@ -33,7 +33,7 @@ class AttributeReader
      * @param null|string $property
      * @return bool
      */
-    public static function isLoggable(object $object, string $property = null): bool
+    public static function isLoggable(object $object, ?string $property = null): bool
     {
         $classAttribute = self::getClassAttributeInstance($object);
 
