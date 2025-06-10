@@ -1,0 +1,14 @@
+parameters:
+    level: 7
+    paths:
+        - Attribute
+        - DependencyInjection
+        - Entity
+        - EventSubscriber
+        - Service
+        - Tests
+        - MbDoctrineLogBundle.php
+    parallel:
+        processTimeout: 300.0
+        maximumNumberOfProcesses: 4
+    reportUnmatchedIgnoredErrors: false
