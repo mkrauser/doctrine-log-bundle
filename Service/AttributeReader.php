@@ -22,8 +22,8 @@ class AttributeReader
         $classname = str_replace('Proxies\__CG__\\', '', get_class($entity));
         $class = new ReflectionClass($classname);
         $attribute = $class->getAttributes(Loggable::class)[0] ?? null;
-        if(null !== $attribute && $instance = $attribute->newInstance()) {
-            return $instance;
+        if(null !== $attribute) {
+            return $attribute->newInstance();
         }
 
         return null;
@@ -95,8 +95,8 @@ class AttributeReader
 
         $attribute = $property->getAttributes(Log::class)[0] ?? null;
 
-        if (null !== $attribute && $instance = $attribute->newInstance()) {
-            return $instance->expression;
+        if (null !== $attribute) {
+            return $attribute->newInstance()->expression;
         }
 
         return null;

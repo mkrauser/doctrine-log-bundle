@@ -77,7 +77,6 @@ class Log
         return $this->action;
     }
 
-    /** @return  */
     public function getChanges(): array
     {
         return $this->changes;
