@@ -8,14 +8,17 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
+use Doctrine\ORM\Event\PostPersistEventArgs;
+use Doctrine\ORM\Event\PostUpdateEventArgs;
+use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\PersistentCollection;
+use Mb\DoctrineLogBundle\Entity\Log;
 use Mb\DoctrineLogBundle\Entity\Log as LogEntity;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
 use Mb\DoctrineLogBundle\Service\AttributeReader;
 use Mb\DoctrineLogBundle\Service\Logger as LoggerService;
-use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
@@ -23,7 +26,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
  *
  * @package CoreBundle\EventListener
  *
- * @SuppressWarnings(PHPMD.UnusedFormalParameter.Unused)
+ * @SuppressWarnings("PHPMD.UnusedFormalParameter.Unused")
  */
 #[AsDoctrineListener(event: Events::postPersist)]
 #[AsDoctrineListener(event: Events::postUpdate)]
@@ -32,11 +35,14 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 #[AsDoctrineListener(event: Events::postFlush)]
 final class Logger implements EventSubscriber
 {
-    /** @var array<string, string> */
+    /** @var array<string, Log> */
     protected $logs;
 
     protected ExpressionLanguage $expressionLanguage;
 
+    /**
+     * @param string[] $ignoreProperties
+     */
     public function __construct(
         protected EntityManagerInterface $entityManager,
         protected LoggerService $loggerService,
@@ -48,19 +54,19 @@ final class Logger implements EventSubscriber
         $this->expressionLanguage = new ExpressionLanguage();
     }
 
-    public function postPersist(LifecycleEventArgs $args): void
+    public function postPersist(PostPersistEventArgs $args): void
     {
         $entity = $args->getObject();
         $this->log($entity, LogEntity::ACTION_CREATE);
     }
 
-    public function postUpdate(LifecycleEventArgs $args): void
+    public function postUpdate(PostUpdateEventArgs $args): void
     {
         $entity = $args->getObject();
         $this->log($entity, LogEntity::ACTION_UPDATE);
     }
 
-    public function preRemove(LifecycleEventArgs $args): void
+    public function preRemove(PreRemoveEventArgs $args): void
     {
         $entity = $args->getObject();
         $this->log($entity, LogEntity::ACTION_REMOVE);
@@ -68,7 +74,7 @@ final class Logger implements EventSubscriber
 
     public function onFlush(OnFlushEventArgs $args): void
     {
-        foreach ($args->getEntityManager()->getUnitOfWork()->getScheduledCollectionUpdates() as $collectionUpdate) {
+        foreach ($args->getObjectManager()->getUnitOfWork()->getScheduledCollectionUpdates() as $collectionUpdate) {
             $owner = $collectionUpdate->getOwner();
 
             $mapping = $collectionUpdate->getMapping();
@@ -125,7 +131,7 @@ final class Logger implements EventSubscriber
         }
     }
 
-    private function log(object $entity, string $action)
+    private function log(object $entity, string $action): void
     {
         try {
             if ($this->reader::isLoggable($entity)) {

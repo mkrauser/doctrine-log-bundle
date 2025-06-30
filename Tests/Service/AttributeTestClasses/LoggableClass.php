@@ -8,8 +8,8 @@ use Mb\DoctrineLogBundle\Attribute\Loggable;
 #[Loggable(strategy: Loggable::STRATEGY_INCLUDE_ALL)]
 class LoggableClass
 {
-    private $loggableProp;
+    public bool $loggableProp;
 
     #[Exclude]
-    private $nonLoggableProp;
+    public bool $nonLoggableProp;
 }

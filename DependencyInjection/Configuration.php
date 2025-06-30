@@ -2,6 +2,8 @@
 
 namespace Mb\DoctrineLogBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -11,12 +13,8 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('mb_doctrine_log');
-        if (method_exists($treeBuilder, 'getRootNode')) {
-            $rootNode = $treeBuilder->getRootNode();
-        } else {
-            // for symfony/config 4.1 and older
-            $rootNode = $treeBuilder->root('mb_doctrine_log');
-        }
+
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()

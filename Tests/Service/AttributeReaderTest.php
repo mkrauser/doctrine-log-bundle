@@ -18,7 +18,7 @@ class AttributeReaderTest extends TestCase
     #[TestWith([LoggableClass::class, 'nonLoggableProp', false])]
     #[TestWith([LoggableExcludeDefaultClass::class, 'loggableProp', true])]
     #[TestWith([LoggableExcludeDefaultClass::class, 'nonLoggableProp', false])]
-    public function testIsLoggable(string $class, ?string $prop, bool $result)
+    public function testIsLoggable(string $class, ?string $prop, bool $result): void
     {
         $this->assertEquals($result, AttributeReader::isLoggable(new $class(), $prop));
     }

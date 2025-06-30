@@ -15,6 +15,7 @@ class Logger
     {
     }
 
+    /** @param array<string, array<mixed, mixed>> $changes */
     public function log(object $object, string $action, ?array $changes = null) : LogEntity
     {
         $class = $this->entityManager->getClassMetadata(get_class($object));
@@ -22,7 +23,7 @@ class Logger
 
         $username = null;
         if($this->security->getUser()) {
-            $username = $this->security->getUser()->getUsername();
+            $username = $this->security->getUser()->getUserIdentifier();
         }
         return new LogEntity(
             $class->getName(),

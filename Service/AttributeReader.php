@@ -18,7 +18,9 @@ class AttributeReader
      */
     private static function getClassAttributeInstance(object $entity): ?Loggable
     {
-        $class = new ReflectionClass(str_replace('Proxies\__CG__\\', '', get_class($entity)));
+        /** @var class-string $classname */
+        $classname = str_replace('Proxies\__CG__\\', '', get_class($entity));
+        $class = new ReflectionClass($classname);
         $attribute = $class->getAttributes(Loggable::class)[0] ?? null;
         if(null !== $attribute && $instance = $attribute->newInstance()) {
             return $instance;
@@ -40,7 +42,7 @@ class AttributeReader
         if(null === $classAttribute) {
             return false;
         }
-        return !$property ? $classAttribute instanceof Loggable : self::isPropertyLoggable($classAttribute, $object, $property);
+        return !$property ? true : self::isPropertyLoggable($classAttribute, $object, $property);
     }
     
     public static function getOnDeleteLogExpression(object $object): ?string {

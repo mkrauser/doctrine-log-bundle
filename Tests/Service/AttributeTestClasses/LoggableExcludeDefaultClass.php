@@ -10,7 +10,7 @@ class LoggableExcludeDefaultClass
 {
 
     #[Log]
-    private $loggableProp;
+    public bool $loggableProp;
 
-    private $nonLoggableProp;
+    public bool $nonLoggableProp;
 }
