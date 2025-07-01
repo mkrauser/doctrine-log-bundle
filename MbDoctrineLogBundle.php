@@ -16,5 +16,4 @@ class MbDoctrineLogBundle extends Bundle
     {
         return new MbDoctrineLogExtension();
     }
-
 }

@@ -28,7 +28,8 @@
             "Mb\\DoctrineLogBundle\\": ""
         },
         "exclude-from-classmap": [
-            "/Tests/"
+            "/Tests/",
+            "rector.php"
         ]
     },
     "autoload-dev": {
